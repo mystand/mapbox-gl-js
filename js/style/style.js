@@ -338,7 +338,6 @@ Style.prototype = util.inherit(Evented, {
         source.style = this;
         source.setEventedParent(this, {source: source});
 
-        this._updates.events.push(['source.add', {source: source}]);
         this._updates.changed = true;
 
         return this;

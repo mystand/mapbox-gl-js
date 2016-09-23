@@ -986,30 +986,29 @@ test('Map', function(t) {
     });
 
     t.test('render stabilizes', function (t) {
-        var style = createStyle();
-        style.sources.mapbox = {
-            type: 'vector',
-            minzoom: 1,
-            maxzoom: 10,
-            tiles: ['http://example.com/{z}/{x}/{y}.png']
-        };
-        style.layers.push({
-            id: 'layerId',
-            type: 'circle',
-            source: 'mapbox',
-            'source-layer': 'sourceLayer'
+        var map = createMap({
+            style: util.extend(createStyle(), {
+                sources: {
+                    mapbox: {
+                        type: 'vector',
+                        minzoom: 1,
+                        maxzoom: 10,
+                        tiles: ['http://example.com/{z}/{x}/{y}.png']
+                    }
+                },
+                layers: [{
+                    id: 'layerId',
+                    type: 'circle',
+                    source: 'mapbox',
+                    'source-layer': 'sourceLayer'
+                }]
+            })
         });
 
-        var timer;
-        var map = createMap({ style: style });
-        map.on('render', function () {
-            if (timer) clearTimeout(timer);
-            timer = setTimeout(function () {
-                map.off('render');
-                map.on('render', t.fail);
-                t.notOk(map._frameId, 'no rerender scheduled');
-                t.end();
-            }, 100);
+        map.once('render', function () {
+            t.notOk(map._frameId, 'no rerender scheduled');
+            map.on('render', t.fail);
+            t.end();
         });
     });
 

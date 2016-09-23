@@ -201,11 +201,6 @@ var Map = module.exports = function(options) {
         this._update(true);
     });
 
-    this.on('source.add', function(event) {
-        var source = event.source;
-        if (source.onAdd) source.onAdd(this);
-    });
-
     this.on('source.remove', function(event) {
         var source = event.source;
         if (source.onRemove) source.onRemove(this);
@@ -655,12 +650,12 @@ util.extend(Map.prototype, /** @lends Map.prototype */{
      * @param {Object} source The source object, conforming to the
      * Mapbox Style Specification's [source definition](https://www.mapbox.com/mapbox-gl-style-spec/#sources).
      * @param {string} source.type The source type, which must be either one of the core Mapbox GL source types defined in the style specification or a custom type that has been added to the map with {@link Map#addSourceType}.
-     * @fires source.add
      * @returns {Map} `this`
      */
     addSource: function(id, source) {
         this.style.addSource(id, source);
         this._update(true);
+        this.style.sources[id].onAdd(this);
         return this;
     },
 
