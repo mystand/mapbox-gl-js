@@ -1,4 +1,4 @@
-Mapbox GL JS has [API documentation](#api-documentation) and [examples](#examples).
+Mapbox GL JS has [API documentation](#writing-api-documentation) and [examples](#writing-examples).
 
 ## Writing API Documentation
 
@@ -18,14 +18,15 @@ API documentation is written as [JSDoc comments](http://usejsdoc.org/) and proce
 
 ## Writing Examples
 
-Examples are written as Jekyll posts in `docs/_posts/examples`. The Jekyll front matter should include the following items:
+Examples are written as [Batfish](https://github.com/mapbox/batfish) pages in `docs/pages/example`. Each example requires two files: an `.html` file containing the source
+code for the example, and a `.js` file containing example boilerplate and front matter. The front matter should include the following items:
 
-* `layout`: `example`
-* `category`: `example`
 * `title`: A short title for the example in **sentence case** as a **verb phrase**
 * `description`: A one sentence description of the example
+* `tags`: An array of tags for the example, which determine the sections it is listed in in the sidebar navigation
+* `pathname`: The relative path of the example, including leading `/mapbox-gl-js/example/` path
 
-In the post body, write the HTML and JavaScript constituting the example.
+In the `.html` file, write the HTML and JavaScript constituting the example.
 
 * Use **4 space indentation**. Exception: do not add an initial level of indentation to code within `<script>` tags (it should start flush left).
 * Do **not** include an access token in the example code. The access token will be inserted automatically by the template, using the current logged in user's default public token, or a placeholder `<insert token here>` string if the user is not logged in.
@@ -39,36 +40,17 @@ To start a documentation server locally run
 npm run start-docs
 ```
 
-You can view the documentation at
-
-```bash
-open http://127.0.0.1:4000/mapbox-gl-js
-```
-
-### Troubleshooting
-
-Ensure you have the right version of all dependencies
-
-```bash
-npm install
-```
-
-Ensure you are running Jekyll version 2.5.x
-
-```bash
-jekyll -v
- > jekyll 2.5.3
-```
+The command will print the URL you can use to view the documentation.
 
 ## Committing and Publishing Documentation
 
-The mapbox-gl-js repository has both `master` and `mb-pages` as active branches. The **`master` branch** is used for mainline code development: the next version of mapbox-gl-js will come from the code in this branch, and it may contain documentation and examples for APIs that are not yet part of a public release. The **`mb-pages` branch** is published to https://www.mapbox.com/mapbox-gl-js/ on any push to the branch. For the purposes of documentation changes, use these two branches as follows:
+The mapbox-gl-js repository has both `master` and `publisher-production` as active branches. The **`master` branch** is used for mainline code development: the next version of mapbox-gl-js will come from the code in this branch, and it may contain documentation and examples for APIs that are not yet part of a public release. The **`publisher-production` branch** is published to https://www.mapbox.com/mapbox-gl-js/ on any push to the branch. For the purposes of documentation changes, use these two branches as follows:
 
-* If your changes are relevant to the **currently released version**, make them on `mb-pages`. Examples: correcting the API documentation for a released API, adding a new example that depends only on current APIs.
+* If your changes are relevant to the **currently released version**, make them on `publisher-production`. Examples: correcting the API documentation for a released API, adding a new example that depends only on current APIs.
 * If your changes depend on gl-js features **not in the currently released version**, make them on `master`. Examples: documenting or adding an example for a newly-added API.
 
 When releasing, the release manager will:
 
-* Merge `mb-pages` to `master`, ensuring that any accumulated changes in `mb-pages` propagate to `master`
+* Merge `publisher-production` to `master`, ensuring that any accumulated changes in `publisher-production` propagate to `master`
 * Make the release
-* Fast-forward `mb-pages` to the current `master`, ensuring that all accumulated changes are published to mapbox.com
+* Fast-forward `publisher-production` to the current `master`, ensuring that all accumulated changes are published to mapbox.com
